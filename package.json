@@ -1,6 +1,6 @@
 {
   "name": "egk-mock-service",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple mock service for insurance data",
   "main": "main.js",
   "scripts": {
