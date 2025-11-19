@@ -4,14 +4,14 @@ on:
   push:
     branches:
       - master
-    tags:
-      - 'v*'
   pull_request:
     branches:
       - master
 
 jobs:
-  build:
+  # Build job for pull requests (validation only)
+  build-pr:
+    if: github.event_name == 'pull_request'
     runs-on: windows-latest
 
     steps:
@@ -33,18 +33,23 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: egk-mock-service-windows
+          name: egk-mock-service-windows-pr
           path: dist/EGK Mock Service-win32-x64/**/*
-          retention-days: 30
+          retention-days: 7
 
-  release:
-    needs: build
+  # Auto-release job for pushes to master
+  auto-release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: windows-latest
-    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -52,35 +57,41 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump version and create tag
+        id: version
+        run: |
+          npm version patch -m "chore: bump version to %s [skip ci]"
+          $VERSION = node -p "require('./package.json').version"
+          echo "new_version=v$VERSION" >> $env:GITHUB_OUTPUT
+          git push origin master
+          git push origin "v$VERSION"
+        shell: pwsh
+
       - name: Install dependencies
         run: npm install
 
       - name: Build Windows executable
         run: npm run build
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-
       - name: Package executable
         run: |
           cd "dist/EGK Mock Service-win32-x64"
-          Compress-Archive -Path * -DestinationPath ../egk-mock-service-${{ github.ref_name }}-win-x64.zip
+          Compress-Archive -Path * -DestinationPath ../egk-mock-service-${{ steps.version.outputs.new_version }}-win-x64.zip
         shell: pwsh
 
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.new_version }}
+          name: Release ${{ steps.version.outputs.new_version }}
+          files: dist/egk-mock-service-${{ steps.version.outputs.new_version }}-win-x64.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/egk-mock-service-${{ github.ref_name }}-win-x64.zip
-          asset_name: egk-mock-service-${{ github.ref_name }}-win-x64.zip
-          asset_content_type: application/zip
