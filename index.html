@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGK Mock Service</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>EGK Mock Service</h1>
+
+        <div class="settings-section">
+            <h2>Einstellungen</h2>
+
+            <div class="setting-group">
+                <label class="setting-label">Versicherten-ID:</label>
+
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="idMode" value="random" checked>
+                        <span>Zufällige ID</span>
+                    </label>
+
+                    <label class="radio-option">
+                        <input type="radio" name="idMode" value="fixed">
+                        <span>Feste ID</span>
+                    </label>
+                </div>
+
+                <div class="input-group">
+                    <input
+                        type="text"
+                        id="fixedId"
+                        class="text-input"
+                        placeholder="z.B. V123456789"
+                        disabled
+                        maxlength="15"
+                    >
+                    <small class="hint">Format: V + 9 Ziffern (z.B. V123456789)</small>
+                </div>
+            </div>
+
+            <!-- Erweiterte Einstellungen -->
+            <div class="advanced-section">
+                <button type="button" class="advanced-toggle" id="advancedToggle">
+                    <span class="toggle-icon">▶</span>
+                    <span>Erweiterte Einstellungen</span>
+                </button>
+
+                <div class="advanced-content" id="advancedContent">
+                    <div class="advanced-grid">
+                        <!-- Persönliche Daten -->
+                        <div class="advanced-group">
+                            <h3>Persönliche Daten</h3>
+
+                            <div class="field-group">
+                                <label>Vorname:</label>
+                                <input type="text" id="vorname" class="text-input" placeholder="Zufällig">
+                            </div>
+
+                            <div class="field-group">
+                                <label>Nachname:</label>
+                                <input type="text" id="nachname" class="text-input" placeholder="Zufällig">
+                            </div>
+
+                            <div class="field-group">
+                                <label>Geschlecht:</label>
+                                <select id="geschlecht" class="select-input">
+                                    <option value="">Zufällig</option>
+                                    <option value="M">Männlich (M)</option>
+                                    <option value="W">Weiblich (W)</option>
+                                </select>
+                            </div>
+
+                            <div class="field-group">
+                                <label>Geburtsdatum:</label>
+                                <input type="text" id="geburtsdatum" class="text-input" placeholder="Zufällig (JJJJMMTT)">
+                                <small class="hint">Format: JJJJMMTT (z.B. 19850315)</small>
+                            </div>
+                        </div>
+
+                        <!-- Adressdaten -->
+                        <div class="advanced-group">
+                            <h3>Adresse</h3>
+
+                            <div class="field-group">
+                                <label>Straße:</label>
+                                <input type="text" id="strasse" class="text-input" placeholder="Zufällig">
+                            </div>
+
+                            <div class="field-group">
+                                <label>Hausnummer:</label>
+                                <input type="text" id="hausnummer" class="text-input" placeholder="Zufällig">
+                            </div>
+
+                            <div class="field-group">
+                                <label>Postleitzahl:</label>
+                                <input type="text" id="postleitzahl" class="text-input" placeholder="Zufällig" maxlength="5">
+                            </div>
+
+                            <div class="field-group">
+                                <label>Ort:</label>
+                                <input type="text" id="ort" class="text-input" placeholder="Zufällig">
+                            </div>
+                        </div>
+
+                        <!-- Versicherungsdaten -->
+                        <div class="advanced-group">
+                            <h3>Versicherung</h3>
+
+                            <div class="field-group">
+                                <label>Krankenkasse:</label>
+                                <select id="krankenkasse" class="select-input">
+                                    <option value="">Zufällig</option>
+                                    <option value="AOK Bayern">AOK Bayern</option>
+                                    <option value="Barmer GEK">Barmer GEK</option>
+                                    <option value="TK Techniker">TK Techniker</option>
+                                    <option value="DAK Gesundheit">DAK Gesundheit</option>
+                                    <option value="IKK Classic">IKK Classic</option>
+                                    <option value="BKK VBU">BKK VBU</option>
+                                    <option value="HEK Hanseatische">HEK Hanseatische</option>
+                                    <option value="KKH Allianz">KKH Allianz</option>
+                                </select>
+                            </div>
+
+                            <div class="field-group">
+                                <label>Versicherungsbeginn:</label>
+                                <input type="text" id="versicherungsbeginn" class="text-input" placeholder="Zufällig (JJJJMMTT)">
+                                <small class="hint">Format: JJJJMMTT (z.B. 20150101)</small>
+                            </div>
+
+                            <div class="field-group">
+                                <label>Kostenträgerkennung 1:</label>
+                                <input type="text" id="kostentraeger1" class="text-input" placeholder="Zufällig" maxlength="9">
+                            </div>
+
+                            <div class="field-group">
+                                <label>Kostenträgerkennung 2:</label>
+                                <input type="text" id="kostentraeger2" class="text-input" placeholder="Zufällig" maxlength="9">
+                            </div>
+
+                            <div class="field-group">
+                                <label>WOP:</label>
+                                <input type="text" id="wop" class="text-input" placeholder="Zufällig" maxlength="2">
+                            </div>
+
+                            <div class="field-group">
+                                <label>Versichertenart:</label>
+                                <input type="text" id="versichertenart" class="text-input" placeholder="Zufällig" maxlength="1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-section">
+            <button id="startBtn" class="btn btn-primary">Server starten</button>
+            <button id="stopBtn" class="btn btn-secondary" disabled>Server stoppen</button>
+        </div>
+
+        <div class="status-section">
+            <h2>Status</h2>
+            <div id="statusDisplay" class="status-box">
+                <span class="status-indicator status-stopped"></span>
+                <span class="status-text">Server gestoppt</span>
+            </div>
+            <div id="urlDisplay" class="url-box" style="display: none;">
+                <strong>Server URL:</strong> <span id="serverUrl">http://localhost:5724</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

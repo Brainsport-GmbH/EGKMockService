@@ -2,11 +2,44 @@
   "name": "egk-mock-service",
   "version": "1.0.0",
   "description": "Simple mock service for insurance data",
-  "main": "server.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "electron .",
+    "build": "electron-packager . \"EGK Mock Service\" --platform=win32 --arch=x64 --out=dist --overwrite",
+    "build:win": "electron-builder --win portable"
   },
   "dependencies": {
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "electron-packager": "^17.1.2"
+  },
+  "build": {
+    "appId": "com.egk.mockservice",
+    "productName": "EGK Mock Service",
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "server.js",
+      "index.html",
+      "renderer.js",
+      "styles.css",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    }
   }
 }

@@ -36,3 +36,16 @@ coverage/
 # OS specific files
 .DS_Store
 Thumbs.db
+
+# Build output
+dist/
+
+# Electron builder artifacts
+builder-*.yml
+builder-*.yaml
+
+# Executables
+*.exe
+
+# AI assistant files
+.claude/

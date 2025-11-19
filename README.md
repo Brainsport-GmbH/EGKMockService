@@ -1,114 +1,176 @@
-# EGKMockService
+# EGK Mock Service
 
-A mock service that simulates German electronic health insurance card (elektronische Gesundheitskarte, EGK) data responses. This service is meant to be used as a mocking service for the card reader - if you don't have a physical card reader with a card inside, this service provides sample data to simulate one.
+Ein einfacher Mock-Service für deutsche Krankenversicherungsdaten (Elektronische Gesundheitskarte) mit benutzerfreundlicher grafischer Oberfläche.
 
-## Purpose
+## Funktionen
 
-This lightweight mock service provides standardized sample data for development and testing purposes when you:
-- Don't have access to a physical card reader
-- Need consistent test data during development
-- Want to test your application's integration with EGK data
+- **Grafische Benutzeroberfläche** - Einfach zu bedienen, auch für nicht-technische Nutzer
+- **Konfigurierbare Versicherten-ID**:
+  - Zufällige IDs bei jeder Anfrage
+  - Feste ID für konsistente Tests
+- **Erweiterte Einstellungen** - Alle EGK-Daten konfigurierbar:
+  - Persönliche Daten (Vorname, Nachname, Geschlecht, Geburtsdatum)
+  - Adressdaten (Straße, Hausnummer, Postleitzahl, Ort)
+  - Versicherungsdaten (Krankenkasse, Versicherungsbeginn, Kostenträger, WOP, Versichertenart)
+- **Windows-kompatibel** - Läuft als eigenständige .exe-Datei ohne zusätzliche Software
 
-## Features
+## Installation & Build
 
-- Provides a RESTful API endpoint that returns sample EGK insurance data
-- Simulates the structure of real EGK data with anonymized information
-- Includes CORS support for cross-origin requests
-- Runs on port 5724
+### Voraussetzungen (nur für Entwicklung)
+- Node.js (Version 16 oder höher)
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js
-- npm
-
-### Installation
-
-1. Clone this repository
-2. Install dependencies:
+### Dependencies installieren
 
 ```bash
 npm install
 ```
 
-### Running the Service
-
-Start the server using either:
+### Entwicklungsmodus starten
 
 ```bash
 npm start
 ```
 
-Or:
+### Windows-Anwendung erstellen
 
 ```bash
-node server.js
+npm run build
 ```
 
-The server will run on http://localhost:5724
+Die Anwendung wird mit **electron-packager** gepackt. Das Ergebnis befindet sich in:
+- **Ordner**: `dist\EGK Mock Service-win32-x64\`
+- **Executable**: `EGK Mock Service.exe`
 
-## API Usage
+Der gesamte Ordner kann auf andere Windows-PCs kopiert werden - keine Installation erforderlich!
 
-Send a GET request to the root endpoint:
+## Verwendung
 
+### Entwicklungsmodus
+1. Öffnen Sie ein Terminal im Projektordner
+2. Führen Sie `npm install` aus (nur beim ersten Mal)
+3. Führen Sie `npm start` aus
+4. Die Anwendung öffnet sich automatisch
+
+### Windows-Anwendung (nach dem Build)
+1. Navigieren Sie zum Ordner `dist\EGK Mock Service-win32-x64\`
+2. Doppelklicken Sie auf `EGK Mock Service.exe`
+3. Die Anwendung startet sofort - keine Installation nötig!
+
+**Verteilung:**
+- Kopieren Sie den gesamten Ordner `EGK Mock Service-win32-x64` auf andere PCs
+- Alternativ: Erstellen Sie ein ZIP-Archiv für einfachere Verteilung
+
+## Bedienung
+
+### Grundeinstellungen
+
+1. **Versicherten-ID wählen**:
+   - **Zufällige ID**: Bei jeder Anfrage wird eine neue ID generiert (z.B. V123456789)
+   - **Feste ID**: Geben Sie eine spezifische ID ein (Format: V + 9 Ziffern)
+
+### Erweiterte Einstellungen
+
+2. **Erweiterte Einstellungen öffnen**:
+   - Klicken Sie auf "▶ Erweiterte Einstellungen"
+   - Der Bereich klappt auf und zeigt drei Kategorien:
+     - **Persönliche Daten**: Vorname, Nachname, Geschlecht, Geburtsdatum
+     - **Adresse**: Straße, Hausnummer, Postleitzahl, Ort
+     - **Versicherung**: Krankenkasse, Versicherungsbeginn, Kostenträger-IDs, WOP, Versichertenart
+
+   **Hinweis**: Alle leeren Felder werden mit zufälligen Werten gefüllt. Nur ausgefüllte Felder verwenden die eingegebenen Werte.
+
+### Server-Steuerung
+
+3. **Server starten**:
+   - Klicken Sie auf "Server starten"
+   - Der Status ändert sich zu "Server läuft"
+   - Die Server-URL wird angezeigt: `http://localhost:5724`
+   - Alle Einstellungen werden während des Server-Betriebs gesperrt
+
+4. **Server stoppen**:
+   - Klicken Sie auf "Server stoppen"
+   - Der Server wird beendet
+   - Einstellungen können wieder geändert werden
+
+5. **Anwendung beenden**:
+   - Schließen Sie das Fenster
+   - Der Server wird automatisch beendet
+
+## API-Verwendung
+
+Nach dem Start des Servers können Sie Mock-Daten abrufen:
+
+```bash
+curl http://localhost:5724
 ```
-GET http://localhost:5724/
-```
 
-## Example Response
+### Beispiel-Response
 
-The service returns a JSON object with sample insurance data including:
-- Personal data (name, address, date of birth)
-- Insurance details (insurance ID, provider information)
-- Coverage information
-
-Example:
 ```json
 {
-    "daten": {
-        "PersoenlicheVersicherungsdaten": {
-            "Versicherter": {
-                "Versicherten_ID": "V495276477",
-                "Person": {
-                    "StrassenAdresse": {
-                        "Ort": "Beispielstadt",
-                        "Postleitzahl":"12345",
-                        "Strasse": "Beispielstra�e",
-                        "Hausnummer":"42",
-                        "Land": {"Wohnsitzlaendercode": "D"}
-                    },
-                    "Geburtsdatum":"19900101",
-                    "Nachname": "Mustermann",
-                    "Geschlecht": "M",
-                    "Vorname": "Max"
-                }
-            }
-        },
-        "AllgemeineVersicherungsdaten": {
-            "Versicherter": {
-                "Versicherungsschutz": {
-                    "Beginn":"20160501",
-                    "Kostentraeger": {
-                        "Kostentraegerlaendercode": "D",
-                        "Kostentraegerkennung":"103170002",
-                        "AbrechnenderKostentraeger": {
-                            "Kostentraegerlaendercode": "D",
-                            "Kostentraegerkennung":"105186802",
-                            "Name": "Beispielkrankenkasse"
-                        },
-                        "Name": "Beispielkrankenkasse"
-                    }
-                },
-                "Zusatzinfos": {
-                    "ZusatzinfosGKV": {
-                        "Zusatzinfos_Abrechnung_GKV": {"WOP":"46"},
-                        "Versichertenart":"1"
-                    }
-                }
-            }
+  "daten": {
+    "PersoenlicheVersicherungsdaten": {
+      "Versicherter": {
+        "Versicherten_ID": "V123456789",
+        "Person": {
+          "StrassenAdresse": {
+            "Ort": "München",
+            "Postleitzahl": "80331",
+            "Strasse": "Hauptstraße",
+            "Hausnummer": "42",
+            "Land": {"Wohnsitzlaendercode": "D"}
+          },
+          "Geburtsdatum": "19750315",
+          "Nachname": "Mustermann",
+          "Geschlecht": "M",
+          "Vorname": "Max"
         }
+      }
     },
-    "status": "OK"
+    "AllgemeineVersicherungsdaten": {
+      "Versicherter": {
+        "Versicherungsschutz": {
+          "Beginn": "20150101",
+          "Kostentraeger": {
+            "Kostentraegerlaendercode": "D",
+            "Kostentraegerkennung": "104212059",
+            "Name": "AOK Bayern"
+          }
+        }
+      }
+    }
+  },
+  "status": "OK"
 }
 ```
+
+## Technische Details
+
+- **Port**: 5724
+- **Framework**: Electron + Express.js
+- **Packaging**: electron-packager
+- **CORS**: Aktiviert für alle Origins
+- **Datenformat**: JSON
+- **Plattform**: Windows (x64)
+
+## Änderungsprotokoll
+
+### Version 1.1.0
+- ✨ **Neu**: Erweiterte Einstellungen mit allen konfigurierbaren EGK-Daten
+  - Persönliche Daten (Vorname, Nachname, Geschlecht, Geburtsdatum)
+  - Adressdaten (Straße, Hausnummer, PLZ, Ort)
+  - Versicherungsdaten (Krankenkasse, Versicherungsbeginn, Kostenträger, WOP, Versichertenart)
+- ✨ Ausklappbare UI-Sektion für erweiterte Einstellungen
+- 🔧 Wechsel zu electron-packager für zuverlässiges Windows-Packaging
+- 🐛 Build-Prozess optimiert (keine Admin-Rechte mehr erforderlich)
+
+### Version 1.0.0
+- Grafische Benutzeroberfläche mit Electron
+- Konfigurierbare Versicherten-ID (zufällig oder fest)
+- Windows .exe Build-Support
+- Automatisches Beenden des Servers beim Schließen
+- Bug-Fix: Versicherten-ID wird nun korrekt verwendet (nicht mehr hardcoded)
+
+## Support
+
+Bei Problemen oder Fragen öffnen Sie bitte ein Issue im Repository.
