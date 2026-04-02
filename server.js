@@ -123,6 +123,8 @@ function startServer(settings = {}) {
         });
 
         server.on('error', (err) => {
+            server = null;
+            app = null;
             reject(err);
         });
     });
