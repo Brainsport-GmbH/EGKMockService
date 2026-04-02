@@ -64,9 +64,8 @@ radioButtons.forEach(radio => {
 function validateVersichertenId(id) {
     if (!id) return true; // Empty is valid for random mode
 
-    // Should start with V and have 9 digits
-    const pattern = /^V\d{9}$/;
-    return pattern.test(id);
+    // Accept any non-empty input from the user
+    return id.length > 0;
 }
 
 // Collect advanced settings
@@ -98,7 +97,7 @@ startBtn.addEventListener('click', async () => {
         }
 
         if (!validateVersichertenId(inputValue)) {
-            alert('Ungültiges Format! Die Versicherten-ID muss mit V beginnen und 9 Ziffern enthalten (z.B. V123456789).');
+            alert('Bitte geben Sie eine gültige Versicherten-ID ein.');
             fixedIdInput.focus();
             return;
         }
