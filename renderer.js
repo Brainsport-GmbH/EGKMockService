@@ -196,19 +196,15 @@ window.electronAPI.onServerStatus((status) => {
 fixedIdInput.addEventListener('input', (e) => {
     let value = e.target.value.toUpperCase();
 
-    // Ensure it starts with V
-    if (value && !value.startsWith('V')) {
-        value = 'V' + value.replace(/V/g, '');
-    }
-
-    // Remove non-digits after V
-    if (value.length > 1) {
-        value = 'V' + value.substring(1).replace(/\D/g, '');
-    }
-
-    // Limit to V + 9 digits
-    if (value.length > 10) {
-        value = value.substring(0, 10);
+    // If first character is a letter, keep it as prefix + digits only after
+    if (value && /^[A-Z]/.test(value)) {
+        value = value[0] + value.substring(1).replace(/\D/g, '');
+        if (value.length > 10) {
+            value = value.substring(0, 10);
+        }
+    } else {
+        // No letter prefix — digits only
+        value = value.replace(/\D/g, '');
     }
 
     e.target.value = value;
